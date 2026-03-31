@@ -1,28 +1,39 @@
-type JourneyStep = 'Orient' | 'Explain' | 'Fit' | 'Prove' | 'Act'
+import { useMemo, useState } from 'react'
+import { WorkspaceSummary } from './components/WorkspaceSummary'
+import { OutcomeSelector } from './modules/orient/OutcomeSelector'
+import { initialWorkspaceState } from './state/siwState'
+import type { JourneyStep } from './types/siw'
 
 const steps: JourneyStep[] = ['Orient', 'Explain', 'Fit', 'Prove', 'Act']
 
-const workspaceState = {
-  industry: 'Telecom',
-  asset: 'Radome / antenna surface',
-  mechanism: 'Water film, icing, contamination',
-  substrate: 'Engineered polymer / composite',
-  environment: 'Cold, wet, high-exposure outdoor',
-  candidatePath: 'Hydrophobic protective coating system',
-  proofStatus: 'Standards and field evidence pending binding',
-  nextAction: 'Technical discussion'
-}
-
 export default function App() {
+  const [workspaceState, setWorkspaceState] = useState(initialWorkspaceState)
+
+  const explainSummary = useMemo(() => {
+    if (workspaceState.mechanism === 'water-icing') {
+      return 'Surface water retention and freezing can degrade performance, increase maintenance burden, and compromise availability in exposed assets.'
+    }
+
+    if (workspaceState.mechanism === 'abrasion') {
+      return 'Particle impact and repeated exposure can remove performance-critical surface function and shorten maintenance intervals.'
+    }
+
+    if (workspaceState.mechanism === 'contamination') {
+      return 'Contamination changes surface behavior over time and increases cleaning burden, inspection frequency, and performance risk.'
+    }
+
+    return 'Long-term outdoor exposure can degrade surface function, appearance, and protection unless the intervention path is matched correctly.'
+  }, [workspaceState.mechanism])
+
   return (
     <main className="siw-shell">
       <header className="hero-card">
         <div>
           <p className="eyebrow">SIW — Surface Intelligence Workspace</p>
-          <h1>Decision-support interface for technical coatings selection</h1>
+          <h1>Cross-page decision support for technical coatings selection</h1>
           <p className="lede">
-            Governed, explainable, proof-led workflow for B2B buyers moving from problem framing to
-            the correct action path.
+            Structured, explainable interface for moving buyers from scenario framing to fit, proof,
+            and the correct commercial or technical next step.
           </p>
         </div>
         <div className="journey-strip" aria-label="SIW journey">
@@ -35,92 +46,50 @@ export default function App() {
       </header>
 
       <section className="grid two-col">
+        <WorkspaceSummary state={workspaceState} />
         <article className="panel-card">
           <div className="panel-head">
-            <h2>Persistent Workspace</h2>
-            <span className="panel-tag">MVP core</span>
+            <h2>Explain layer</h2>
+            <span className="panel-tag">Mechanism clarity</span>
           </div>
-          <dl className="workspace-grid">
-            <div>
-              <dt>Industry</dt>
-              <dd>{workspaceState.industry}</dd>
-            </div>
-            <div>
-              <dt>Asset</dt>
-              <dd>{workspaceState.asset}</dd>
-            </div>
-            <div>
-              <dt>Mechanism</dt>
-              <dd>{workspaceState.mechanism}</dd>
-            </div>
-            <div>
-              <dt>Substrate</dt>
-              <dd>{workspaceState.substrate}</dd>
-            </div>
-            <div>
-              <dt>Environment</dt>
-              <dd>{workspaceState.environment}</dd>
-            </div>
-            <div>
-              <dt>Candidate path</dt>
-              <dd>{workspaceState.candidatePath}</dd>
-            </div>
-            <div>
-              <dt>Proof state</dt>
-              <dd>{workspaceState.proofStatus}</dd>
-            </div>
-            <div>
-              <dt>Next action</dt>
-              <dd>{workspaceState.nextAction}</dd>
-            </div>
-          </dl>
-        </article>
-
-        <article className="panel-card">
-          <div className="panel-head">
-            <h2>MVP module stack</h2>
-            <span className="panel-tag">Phase 1</span>
-          </div>
-          <ul className="module-list">
-            <li>Outcome Selector / Orient</li>
-            <li>Explain layer</li>
-            <li>Fit engine</li>
-            <li>Evidence Drawer / Prove</li>
-            <li>Precision Act CTA routing</li>
-          </ul>
+          <p className="note-text">{explainSummary}</p>
           <p className="note-text">
-            Initial scaffold intentionally prioritizes continuity, explainability, and proof visibility
-            ahead of AI-led behaviors.
+            This module should later bind science explanation, intervention principle, prerequisites,
+            and limitations to the selected scenario.
           </p>
         </article>
+      </section>
+
+      <section className="grid one-col">
+        <OutcomeSelector state={workspaceState} onChange={setWorkspaceState} />
       </section>
 
       <section className="grid three-col">
         <article className="panel-card">
           <div className="panel-head">
-            <h2>Orient</h2>
-            <span className="panel-tag">Entry logic</span>
-          </div>
-          <p>
-            Capture sector, asset, degradation mechanism, substrate, and operating constraints.
-          </p>
-        </article>
-        <article className="panel-card">
-          <div className="panel-head">
             <h2>Fit</h2>
-            <span className="panel-tag">Decision logic</span>
+            <span className="panel-tag">Next module</span>
           </div>
-          <p>
-            Match scenario constraints to solution paths using transparent recommendation rules.
+          <p className="note-text">
+            Expand the rules engine into product-path scoring, exclusions, caution flags, and shortlist comparison.
           </p>
         </article>
         <article className="panel-card">
           <div className="panel-head">
             <h2>Prove</h2>
-            <span className="panel-tag">Trust layer</span>
+            <span className="panel-tag">Next module</span>
           </div>
-          <p>
-            Surface standards, test summaries, field evidence, and limitations in-context.
+          <p className="note-text">
+            Bind standards, case evidence, test summaries, and limitations directly to the active scenario context.
+          </p>
+        </article>
+        <article className="panel-card">
+          <div className="panel-head">
+            <h2>Act</h2>
+            <span className="panel-tag">Next module</span>
+          </div>
+          <p className="note-text">
+            Route users into technical discussion, sample request, documentation pack, or RFQ with prefilled context.
           </p>
         </article>
       </section>

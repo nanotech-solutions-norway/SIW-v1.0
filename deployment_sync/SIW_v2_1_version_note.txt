@@ -1,0 +1,11 @@
+SIW v2.1 version-adjustment note — 2026-04-09 13:05 CEST
+
+Changes applied to the provided source artifact:
+- Updated document title from “SIW v2.0 — Surface Intelligence Workspace” to “SIW v2.1 — Surface Intelligence Workspace”
+- Updated meta description version label from v2.0 to v2.1
+- Updated visible brand/title label from SIW v2.0 to SIW v2.1
+- Updated hero panel kicker from SIW v2.0 to SIW v2.1
+
+Control note:
+- This updates the provided source artifact version label only.
+- It does not by itself prove or change the live deployment source for /siw_10/.
